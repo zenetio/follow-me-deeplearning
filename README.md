@@ -17,15 +17,12 @@ The target of this project is to train a deep neural network to identify and tra
 [image_0]: ./docs/misc/sim_screenshot.png
 ![alt text][image_0]
 
-### This repository ###
-You can check the entire project located in the git repository below.
-```
-https://github.com/udacity/RoboND-DeepLearning-Project/
-```
-Video
-```
-https://youtu.be/FuXLh1z44dU
-```
+### Check the repository ### 
+You can check the entire project located in the [git repository.](https://github.com/zenetio/follow-me-deeplearning)
+
+### Check the video
+
+[The video](https://youtu.be/FuXLh1z44dU)
 
 ## Hardware <a id='hard'></a>
 Train a model for deep learning may take hours or even months due to heavy computational tasks. So, get access to a fast machine is very important in this scenario. You can make use of available services like AWS, Google Cloud and others. In this project I used the following hardware.
