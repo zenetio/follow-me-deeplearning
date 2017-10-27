@@ -20,11 +20,11 @@ The target of this project is to train a deep neural network to identify and tra
 ### This repository ###
 You can check the entire project located in the git repository below.
 ```
-[https://github.com/zenetio/follow-me-deeplearning.git]
+[the follow me repository](https://github.com/zenetio/follow-me-deeplearning.git)
 ```
 Video
 ```
-[https://youtu.be/FuXLh1z44dU]
+[See the video in YouTube)(https://youtu.be/FuXLh1z44dU)
 ```
 
 ## Hardware <a id='hard'></a>
