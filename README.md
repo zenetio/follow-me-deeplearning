@@ -20,11 +20,11 @@ The target of this project is to train a deep neural network to identify and tra
 ### This repository ###
 You can check the entire project located in the git repository below.
 ```
-https://github.com/udacity/RoboND-DeepLearning-Project/
+[https://github.com/udacity/RoboND-DeepLearning-Project/]
 ```
 Video
 ```
-https://youtu.be/FuXLh1z44dU
+[https://youtu.be/FuXLh1z44dU]
 ```
 
 ## Hardware <a id='hard'></a>
