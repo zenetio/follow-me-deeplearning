@@ -17,24 +17,12 @@ The target of this project is to train a deep neural network to identify and tra
 [image_0]: ./docs/misc/sim_screenshot.png
 ![alt text][image_0]
 
-<<<<<<< HEAD
 ### Check the repository ### 
 You can check the entire project located in the [git repository.](https://github.com/zenetio/follow-me-deeplearning)
 
-### Check the video
+### Check the video ###
 
 [The video](https://youtu.be/FuXLh1z44dU)
-=======
-### This repository ###
-You can check the entire project located in the git repository below.
-```
-[the follow me repository](https://github.com/zenetio/follow-me-deeplearning.git)
-```
-Video
-```
-[See the video in YouTube)(https://youtu.be/FuXLh1z44dU)
-```
->>>>>>> f43c9940664778978691e73c26f9f0f23aa3f7d9
 
 ## Hardware <a id='hard'></a>
 Train a model for deep learning may take hours or even months due to heavy computational tasks. So, get access to a fast machine is very important in this scenario. You can make use of available services like AWS, Google Cloud and others. In this project I used the following hardware.
