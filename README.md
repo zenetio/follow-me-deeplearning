@@ -89,7 +89,7 @@ As we can see in the image, FCN is comprised of encoder and decoder. After some 
 
 So, to facilitate the understanding, I will call encoder a set of functions that will result in downsample the input and decoder as a set of functions that will upsample the input.
 
-[image_4]: ./docs/misc/updn.png
+[image_4]: ./docs/misc/updn.PNG
 ![Fig. 4- Downsampling and Updampling][image_4]
 
 So, why encode and decode the image? There is a good explanation [here](https://www.youtube.com/watch?v=nDPWywWRIRo) in this video from Stanford University, but lets try to summarize.
@@ -182,7 +182,7 @@ model.fit_generator()
 ```
 The figure below show the final epoch iteration of training process.
 
-[image_6]: ./docs/misc/loss36.png
+[image_6]: ./docs/misc/loss36.PNG
 ![alt text][image_6]
 Note that while training we can see some overfitting but the model is able to go back to low loss values. Even so it seems that we are getting a bit of noise with this model. 
 
@@ -191,7 +191,7 @@ Note that while training we can see some overfitting but the model is able to go
 The final score for this project is to reach at least 40%.
 Here we have two different scenarios that need be managed by the model with low prediction error.
 
-[image_7]: ./docs/misc/score.png
+[image_7]: ./docs/misc/score.PNG
 ![alt text][image_7]
 1. A good prediction when the quadrotor is following the target. In this case, the model need detect the target (object detection) and then follow the target in different scenarios. Here we got a vlaue of `0.910`.
 2. Detect the target when target is from far away. This scenario is difficult, mainly when we have croud and the pixel classification must be well trained to detect a low percentage of target in the scene. Here we got a value of `0.214`. The difficulty here can be reflected with the high true positive value of `128`.

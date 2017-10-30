@@ -1,3 +1,5 @@
+gitignore
 ./data/train/*.*
 ./data/validation
 *.zip
+*.bak
