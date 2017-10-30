@@ -70,8 +70,8 @@ I tried two types of optimizers: Adam and Nadam. With Nadam I could improve the 
 Another parameter that caused impact in results was the `steps per epochs` and `validation steps.` Using aumumentation to change the number of samples, these values are also impacted as you can see in the following snippet code used in the notebook.
 
 ```
-steps_per_epoch = np.int(((len(os.listdir(os.path.join('..', 'data', 'train', 'images')))/batch_size) + 1) )
-validation_steps = np.int((len(os.listdir(os.path.join('..', 'data', 'validation', 'images')))/batch_size)+
+steps_per_epoch = np.int(((len(os.listdir(os.path.join('..', 'data', 'train', 'images')))/batch_size) + 1))
+validation_steps = np.int((len(os.listdir(os.path.join('..', 'data', 'validation', 'images')))/batch_size)+ 1))
 ```
 The code checks the number of samples in train/validation directories and calculates the two parameters used in the model. 
 
@@ -87,8 +87,25 @@ In this project we use Fully Convolutional Network (FCN) because we want to prod
 ![alt text][image_3]
 As we can see in the image, FCN is comprised of encoder and decoder. After some tests I concluded that 6 layers was enough to reach the expected prediction for this project.
 
+So, to facilitate the understanding, I will call encoder a set of functions that will result in downsample the input and decoder as a set of functions that will upsample the input.
+
+[image_4]: ./docs/misc/updn.png
+![Fig. 4- Downsampling and Updampling][image_4]
+
+So, why encode and decode the image? There is a good explanation [here](https://www.youtube.com/watch?v=nDPWywWRIRo) in this video from Stanford University, but lets try to summarize.
+
+Suppose you have a model to process a high resolution input image and so, a bunch of convolutions that are all keeping the same spatial size of the input image. So, running those convolutions on this high resolution input image over a sequence of layers, would be extremelly computational expensive with the need of lots of memory. Instead, we use an architecture like the Fig. 4 above, where we use downsampling and upsampling. 
+
+As showed in Fig.4, the idea is to work with low resolution instead of high resolution, which means, downsampling and upsampling. 
+
+So, Fig. 4 shows what downsamplig does: it gets the high resolution image as input and ouputs a low resolution image, that is less expensive to work with.
+The basic idea is to do a small number of convolutional layers of the original resolution and then downsample the feature maps using functions like `separable_conv2D`, described in more details later. Note in the Fig. 4 above, that we go from high-res to low-res, or, 3xHxW -> High-res: D1xH/2xW/2 -> Low-res: D3xH/4xW/4. In this operation, one drawback is that we lose some information, like spatial measure and pixel features. Managing the numbere of filters is one way to keep the spatial information.
+Note that in downsampling, I am using stride equal 2. Now we have a small number of original input and the price of computational operation is very cheap. 
+
+Now we need recover the original input image and Fig. 4 shows that we can do it using updampling. The upsampling is the reverse operation where we need to increase the spatial resolution of our predictions in the second half of the network. Now we decrease the network depth, decreasing the number of filter, until reach the original spatial input information. During upsample we are trying to recover the original input pixel features, but we may note be able to recover all the original information. So, to help on this point we add a *concatenate* operation that will add some collected information from input and add to upsampling layer. In this project I used 3 functions to compose the decoder: `bilinear_up_sampling2d`, `concatenate` and `separable_conv2D`. Note that the *bilinear_up_sampling2d* will take the input and increase the size by 2 or the reverse operation in downsample. Then *concatenate* gets same info from encoder layer to tries to improve the upsampling output. Note that for each layer, the number of filters is the halth when compared with the previous layer which decrease the network depth, to make the output size the same when compared with the relative layer in downsampling process.
+
 The function `fcn_model`, in notebook, creates the model as follow.
-```{python}
+```
 def fcn_model(inputs, num_classes):
     strides = 2
     filters = 32
@@ -120,8 +137,8 @@ So, here are the layers used in this project, that comprise encoder and decoder.
 * `batchNormalization.` Here we normalize the activations of the previous layer to reduce internal covariate shift in neural networks.
 * `conv2D 1x1.` At this point the output shape of convolutional layer is a 4D tensor. To avoid loss of spatial information, we use 1x1 convolutional layer. Note that to create a 1x1 convolutional layer, we must have the setup below. You can check this in `fcn_model` function above.
 
-[image_4]: ./docs/misc/conv2D_1x1.png
-![alt text][image_4]
+[image_5]: ./docs/misc/conv2D_1x1.png
+![alt text][image_5]
 We can check in the model where the output of conv2d, [20,20,20,128], is filled into **conv2d 1x1** and the shape is preserved, assuming output as [20,20,20,128].
 
     * 1x1 filter size
@@ -165,8 +182,8 @@ model.fit_generator()
 ```
 The figure below show the final epoch iteration of training process.
 
-[image_5]: ./docs/misc/loss36.png
-![alt text][image_5]
+[image_6]: ./docs/misc/loss36.png
+![alt text][image_6]
 Note that while training we can see some overfitting but the model is able to go back to low loss values. Even so it seems that we are getting a bit of noise with this model. 
 
 ## Compute the class scores <a id='pred'></a>
@@ -174,12 +191,18 @@ Note that while training we can see some overfitting but the model is able to go
 The final score for this project is to reach at least 40%.
 Here we have two different scenarios that need be managed by the model with low prediction error.
 
-[image_6]: ./docs/misc/score.png
-![alt text][image_6]
+[image_7]: ./docs/misc/score.png
+![alt text][image_7]
 1. A good prediction when the quadrotor is following the target. In this case, the model need detect the target (object detection) and then follow the target in different scenarios. Here we got a vlaue of `0.910`.
 2. Detect the target when target is from far away. This scenario is difficult, mainly when we have croud and the pixel classification must be well trained to detect a low percentage of target in the scene. Here we got a value of `0.214`. The difficulty here can be reflected with the high true positive value of `128`.
 
 So, the model got a final score of `0.422`
+
+Can this model be used to follow a different object? For instance, a cat?
+
+Well, semantic segmentatin has been used for image analysis tasks and so, it describes the process of associating each pixel of an image with a class label. In this project, we used 3 classes and one is the target. So, using the same model, we can replace the object associating the target to a cat and the drone will follow the cat.
+
+But how about the data sample provided? Can this data be used to detect the cat? As I said, as the model is taking it pixel and associating to a class label, it seems intuitive that we need add some cats objects in the samples. Otherwise, the model will not be able to make this association, not due to a lack in the model but due to not enough information in the dataset sample. So, this sample dataset is not enough to predict a cat.
 
 ## Future enhancements <a id='enhance'></a>
 
